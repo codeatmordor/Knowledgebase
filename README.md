@@ -64,7 +64,7 @@ to capture all frame on `5432` port. It should look like below
 
 ![wireshark screen](./Postgres/images/wireshark%20screen.png)
 
-#### Capture packets
+#### Capture packet
 1. Now execute above Java code from class `ConnectToPostgres`
 2. Wireshark will capture all the network frames and you can individually inspect them.
 3. Here is one frame which shows result of query `SELECT bar, baz FROM foo`. This is hexadecimal representation.
@@ -94,29 +94,29 @@ Before deciphering this frame, below are the characters from postgres message fo
 | C  | Command Completion  |
 | I  | Idle  | 
 
-##### 1st 4 bytes packet `02 00 00 00`
+##### 1st 4 bytes `02 00 00 00`
 first 4 bytes `02 00 00 00` are for family of protocol which is `IP(2)`.
 
 ![Family](./Postgres/images/1st%204%20bytes.png)
 
-##### Next 20 bytes packet `45 00 00 b1 ..... 7f 00 00 01`
+##### Next 20 bytes `45 00 00 b1 ..... 7f 00 00 01`
 This is for IP version 4 details.
 
 ![IP Version 4](./Postgres/images/IP%20Version%204%20packet.png)
 
-##### Next 32 bytes packet `15 38 da d8 ..... 3d e2 59 98`
+##### Next 32 bytes `15 38 da d8 ..... 3d e2 59 98`
 This is for TCP details including source port, destination port, sequence number etc.
 
 ![tcp src dst](./Postgres/images/tcp%20src%20dst.png)
 
-##### Next 5 bytes packet `31 00 00 00 04`
+##### Next 5 bytes `31 00 00 00 04`
 Hex 31, which is 49 which is `1` is ASCII. In postgres protocol message format `1` is indicative of
 `Parse Completion`. `00 00 00 04` which are for length 4.
 
-##### Next 5 bytes packet `32 00 00 00 04`
+##### Next 5 bytes `32 00 00 00 04`
 `32` which `2` in ASCII which is `Bind Completion`. Subsequent bytes are `00 00 00 04` which are for length 4.
 
-##### Next 51 bytes packet `54 00 00 ..... ff ff 00 00`
+##### Next 51 bytes `54 00 00 ..... ff ff 00 00`
 `54` which is 84 in ASCII which is `T`. `T` is `Row description` as per
 postgres message format. Subsequent bytes are `00 00 00 32` which are for length 50. Next `00 02` is for field count 2. Here we receive a description of all the
 columns returned. Next 4 bytes are `62 61 72 00` which are `bar`,next `00 00 40 06` which is postgres table id (OID) 16390. Next `00 01` is for column index, which is 1.
@@ -124,12 +124,12 @@ Next `00 00 00 14` is for column type id 20. Next `00 08` is for column length 8
 `62 61 7a 00` is for `baz`, `00 00 40 06` is for table id (OID) 16390
 ![row description packet](./Postgres/images/row%20description.png)
 
-##### Next 20 bytes packet `44 00 00 ..... 04 54 65 73 74`
+##### Next 20 bytes `44 00 00 ..... 04 54 65 73 74`
 This packet is for 1st data row.
 
 ![1st data row](./Postgres/images/data%20row.png)
 
-##### Next 24 bytes packet `44 00 00 ..... 20 54 65 73 74`
+##### Next 24 bytes `44 00 00 ..... 20 54 65 73 74`
 This packet is for 2nd data row.
 
 ![2nd data row](./Postgres/images/2nd%20data%20row.png)
@@ -141,12 +141,12 @@ Above 2 packets (44 bytes) are the hex representation of following.
 (2 rows)
 ```
 
-##### Next 14 bytes packet `43 00 00 ..... 20 32 00`
+##### Next 14 bytes `43 00 00 ..... 20 32 00`
 This is for marking command completion.
 
 ![command completion](./Postgres/images/command%20completion.png)
 
-##### Last 6 bytes packet `5a 00 ..... 05 49`
+##### Last 6 bytes `5a 00 ..... 05 49`
 This is for indicating state of readiness.
 
 ![ready for query](./Postgres/images/ready%20for%20query.png)
