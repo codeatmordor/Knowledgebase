@@ -1,7 +1,7 @@
 Ever wondered how [pgjdbc](https://github.com/pgjdbc) communicates with postgresql using custom Postgres protocol.
 I tried to explain it with a simple query example and wireshark's packet capture.
 
-#### Create a simple table with 2 records in it.
+#### Create a simple table with 2 records in it
 
 ```sql 
 gauravsingh=# \d+ foo;
