@@ -1,5 +1,5 @@
 Ever wondered how pgjdbc communicates with postgres using custom Postgres protocol.
-I tried to understand it with a simple example and wireshark's packet capture.
+I tried to explain it with a simple query example and wireshark's packet capture.
 
 #### Create a simple table with 2 records in it.
 
